@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kumo's Website</title>
+    <link rel="stylesheet" href="./css/build.css">
+    <style>
+        @keyframes sway {
+
+            0%,
+            100% {
+                transform: rotate(-200deg);
+            }
+
+            50% {
+                transform: rotate(200deg);
+            }
+        }
+
+        .sway {
+            animation: sway 8s infinite alternate;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class=" py-4 bg-orange-300 text-white text-center shadow-lg">
+        <div class="flex items-center justify-between px-4">
+            <div class="flex items-center">
+                <!-- <img id="floatingImage" src="/logo.png" alt="ksm" class="absolute sway w-16 h-16 opacity-90 right-12 top-6 pointer-events-none">     -->
+                <img src="logo.png" alt="Logo" class="w-8 h-8 mr-2 sway">
+                <h1 class="text-xl font-bold">kumo</h1>
+            </div>
+            <div class="flex ml-0 justify-end space-x-3 pr-2">
+                <button
+                    class="btn p-2 text-sm rounded-md bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-700 focus:ring-opacity-50"
+                    onclick="showBody('body1')">Welcome</button>
+                <button
+                    class="btn p-2 text-sm rounded-md bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-700 focus:ring-opacity-50"
+                    onclick="showBody('body2')">My Product</button>
+            </div>
+        </div>
+    </header>
+    <div id="backbox" class="justify-center flex flex-col items-center h-screen"> <!-- 假设父容器占满整个屏幕高度 -->
+        <div id="body1" class="content hidden content translate-y-[-100%]"> <!-- 使用 translate-y 调整位置，向上移动 -->
+            <h1 class="text-4xl text-center">Welcome to kumo's Website</h1>
+            </br>
+            <p class="text-center mt-4">The web is developing...</p>
+        </div>
+
+
+        <div id="body2" class="content hidden">
+            <p class="text-center mt-4 translate-y-[-800%]">The web is developing...</p>
+        </br>
+            <a href="/gemini" class="translate-y-[-300%] inline-block px-4 py-2 mt-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                gemini Ai 聊天
+            </a>
+            <a href="/docs" class="translate-y-[-300%] inline-block px-4 py-2 mt-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                文档
+            </a>
+            <a href="/bdc" class="translate-y-[-300%] inline-block px-4 py-2 mt-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                bd自制谱资源
+            </a>
+            <a href="https://github.com/kumoSleeping" class="translate-y-[-300%] inline-block px-4 py-2 mt-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                My Github
+            </a>
+            <a href="add" class="translate-y-[-300%] inline-block px-4 py-2 mt-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+                扩列（
+            </a>
+        </div>
+    </div>
+
+    </div>
+    </div>
+
+
+
+    <script>
+        function showBody(bodyId) {
+            // 隐藏所有的.content元素
+            document.querySelectorAll('.content').forEach((element) => {
+                element.classList.add('hidden');
+            });
+            // 显示指定ID的元素
+            document.getElementById(bodyId).classList.remove('hidden');
+            // 检查是否是'body2'，基于此决定是否显示'backbox'
+            if (bodyId === 'body2') {
+                document.getElementById('ask-llm').classList.remove('hidden');
+            }
+            else {
+                document.getElementById('ask-llm')?.classList.add('hidden');
+            }
+        }
+        showBody('body1');
+    </script>
+
+<script>
+    function showBody(bodyId) {
+        // 隐藏所有的.content元素
+        document.querySelectorAll('.content').forEach((element) => {
+            element.classList.add('hidden');
+        });
+        // 显示指定ID的元素
+        document.getElementById(bodyId).classList.remove('hidden');
+    }
+
+    // 解析URL查询参数
+    function getQueryParam(param) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get(param);
+    }
+
+    window.onload = function() {
+        // 根据查询参数决定显示哪个部分
+        const page = getQueryParam('page');
+        if (page === 'product') {
+            showBody('body2'); // 假设'body1'是主页对应的部分
+        } else {
+            showBody('body1'); // 默认显示主页
+        }
+    };
+</script>
+
+
+</body>
+
+</html>

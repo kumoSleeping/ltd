@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kumo's Website</title>
+    <link rel="stylesheet" href="../css/build.css">
+    <style>
+        @keyframes sway {
+
+            0%,
+            100% {
+                transform: rotate(-200deg);
+            }
+
+            50% {
+                transform: rotate(200deg);
+            }
+        }
+
+        .sway {
+            animation: sway 8s infinite alternate;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class=" py-4 bg-orange-300 text-white text-center shadow-lg">
+        <div class="flex items-center justify-between px-4">
+            <div class="flex items-center">
+                <!-- <img id="floatingImage" src="/logo.png" alt="ksm" class="absolute sway w-16 h-16 opacity-90 right-12 top-6 pointer-events-none">     -->
+                <img src="../logo.png" alt="Logo" class="w-8 h-8 mr-2 sway">
+                <h1 class="text-xl font-bold">kumo</h1>
+            </div>
+            <div class="flex ml-0 justify-end space-x-3 pr-2">
+                <a href="/?page=product"
+                    class="btn p-2 text-sm rounded-md bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-700 focus:ring-opacity-50">
+                    HOME
+                </a>
+            </div>            
+        </div>
+    </header>
+
+    <!-- 个人介绍 -->
+    <div id="backbox" class="justify-center flex flex-col items-center h-screen">
+        <div id="body1" class="content content translate-y-[-100%]">
+            <h1 class="text-4xl text-center">Welcome～</h1>
+            </br>
+            <p class="text-center mt-4">My QQ number is (114514+114514)*(114*(51+4)+((1+1)*4*51-4))+114*514+11*45*1*4+1+1+45-14 </p>
+            <div id="qqNumber" class="text-center font-bold"></div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const result = (114514+114514)*(114*(51+4)+((1+1)*4*51-4))+114*514+11*45*1*4+1+1+45-14;
+                    document.getElementById('qqNumber').innerText = "QQ Number: " + result;
+                });
+            </script>
+            <p class="text-center mt-4">通过计算是为了防止被搜索引擎爬取源码信息（雾）</p>
+            
+        </div>
+
+
+
+
+
+</body>
+
+</html>

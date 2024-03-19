@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kumo's Website</title>
+    <link rel="stylesheet" href="../css/build.css">
+    <style>
+        @keyframes sway {
+
+            0%,
+            100% {
+                transform: rotate(-200deg);
+            }
+
+            50% {
+                transform: rotate(200deg);
+            }
+        }
+
+        .sway {
+            animation: sway 8s infinite alternate;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class=" py-4 bg-orange-300 text-white text-center shadow-lg">
+        <div class="flex items-center justify-between px-4">
+            <div class="flex items-center">
+                <!-- <img id="floatingImage" src="/logo.png" alt="ksm" class="absolute sway w-16 h-16 opacity-90 right-12 top-6 pointer-events-none">     -->
+                <img src="../logo.png" alt="Logo" class="w-8 h-8 mr-2 sway">
+                <h1 class="text-xl font-bold">kumo</h1>
+            </div>
+            <div class="flex ml-0 justify-end space-x-3 pr-2">
+                <a href="/?page=product"
+                    class="btn p-2 text-sm rounded-md bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-700 focus:ring-opacity-50">
+                    HOME
+                </a>
+            </div>  
+            
+        </div>
+    </header>
+
+
+    <div id="ask-llm" class="fixed bottom-0 left-0 right-0 p-4">
+        <div id="body2" class="max-w-3xl mx-auto p-6 bg-orange-100 rounded-lg">
+            <form id="gpt-query-form" class="space-y-4">
+                <div class="flex flex-col-reverse">
+                    <textarea id="user-query" name="user_query" placeholder="Type your question here..."
+                        class="p-2 w-full rounded-md text-blue-950 placeholder-gray-400" rows="1"></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="markdown-checkbox" type="checkbox" name="enable_markdown"
+                            class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" checked>
+                        <label for="markdown-checkbox" class="ml-2 text-sm">Enable Markdown</label>
+                    </div>
+                    <button type="submit"
+                        class="py-2 px-4 bg-orange-500 hover:bg-orange-600 rounded-md text-sm font-medium text-cyan-50">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div id="backbox" class="justify-center flex flex-col items-center h-screen">
+        <div id="body1" class="content content translate-y-[-100%]">
+            <h1 class="text-4xl text-center">今天有什么可以帮到您喵～</h1>
+            </br>
+            <p class="text-center mt-4 text-red-600">对不起哦，网站还在建设中喵...</p>
+            
+        </div>
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('gpt-query-form');
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // 阻止表单默认提交
+
+                const formData = new FormData(form);
+                const postData = {
+                    user_query: formData.get('user_query'),
+                    enable_markdown: formData.get('enable_markdown') === 'on'
+                };
+
+                // 替换这里的URL为您的目标URL
+                fetch('您的目标URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(postData),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        // 处理成功响应
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        // 处理错误
+                    });
+            });
+        });
+
+
+        document.addEventListener('keydown', function (event) {
+            const input = document.activeElement;
+
+            // 检查是否为"Enter"键并且焦点在<textarea>元素上
+            if (event.key === 'Enter' && input.tagName === 'TEXTAREA') {
+                if (event.shiftKey) {
+                    // Shift + Enter被按下，插入换行
+                    event.preventDefault(); // 阻止默认行为
+
+                    const start = input.selectionStart;
+                    const end = input.selectionEnd;
+
+                    // 插入换行符并更新光标位置
+                    input.value = input.value.substring(0, start) + "\n" + input.value.substring(end);
+                    input.selectionStart = input.selectionEnd = start + 1;
+                } else {
+                    // 仅Enter被按下，尝试提交表单
+                    event.preventDefault(); // 防止表单再次提交
+
+                    // 找到并提交<textarea>的父表单
+                    let parentForm = input;
+                    while (parentForm.tagName !== 'FORM' && parentForm.parentNode) {
+                        parentForm = parentForm.parentNode;
+                    }
+                    if (parentForm.tagName === 'FORM') {
+                        parentForm.submit();
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var textarea = document.getElementById('user-query');
+
+            // 更新 textarea 行数的函数
+            function updateRows() {
+                var lines = textarea.value.split('\n').length;
+                var maxRows = 8;
+                // 更新 rows，但不超过 maxRows
+                textarea.rows = lines <= maxRows ? lines : maxRows;
+            }
+            // 绑定 input 事件
+            textarea.addEventListener('input', updateRows);
+            // 绑定 keydown 事件以捕捉 Shift + Enter
+            textarea.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' && event.shiftKey) {
+                    // 模拟 input 事件以更新行数
+                    setTimeout(updateRows, 0); // 使用 setTimeout 确保 textarea 的值已更新
+                }
+            });
+        });
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+@keyframes sway {
+  0%, 100% { transform: rotate(-200deg); }
+  50% { transform: rotate(200deg); }
+}
+.sway { animation: sway 8s infinite alternate; }
