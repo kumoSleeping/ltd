@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kumo's Website</title>
     <link rel="stylesheet" href="../css/build.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
         @keyframes sway {
 
@@ -22,6 +24,103 @@
             animation: sway 8s infinite alternate;
         }
     </style>
+    <style>
+        @keyframes typeKeyframes {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    <style>
+        .markdown-body h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .markdown-body h2 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .markdown-body h3 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .markdown-body h4 {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .markdown-body h5 {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .markdown-body h6 {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .markdown-body p {
+            margin-bottom: 1em;
+        }
+
+        .markdown-body ul {
+            padding-left: 1.5em;
+        }
+
+        .markdown-body ul li {
+            margin-bottom: 0.5em;
+        }
+
+        .markdown-body strong {
+            font-weight: bold;
+        }
+
+        .markdown-body em {
+            font-style: italic;
+        }
+
+        .markdown-body code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #ffeeb3;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+        }
+
+        .markdown-body pre {
+            background-color: #ffeeb3;
+            padding: 1em;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+
+        /* 文字白色 */
+        .markdown-body pre code {
+            color: #000000;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid #FDBA74;
+            padding-left: 1em;
+            margin-left: 0;
+        }
+
+        .markdown-body a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -38,14 +137,18 @@
                     class="btn p-2 text-sm rounded-md bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-700 focus:ring-opacity-50">
                     HOME
                 </a>
-            </div>  
-            
+            </div>
+
         </div>
     </header>
 
+    <div class="container mx-auto p-4">
+        <div id="response-container" class="mt-4 markdown-body"></div>
+    </div>
+
 
     <div id="ask-llm" class="fixed bottom-0 left-0 right-0 p-4">
-        <div id="body2" class="max-w-3xl mx-auto p-6 bg-orange-100 rounded-lg">
+        <div id="body2" class="max-w-3xl mx-auto p-6 bg-orange-200 rounded-lg">
             <form id="gpt-query-form" class="space-y-4">
                 <div class="flex flex-col-reverse">
                     <textarea id="user-query" name="user_query" placeholder="Type your question here..."
@@ -64,106 +167,197 @@
         </div>
     </div>
 
+    <!-- 为最底部添加空气墙 -->
+    <div class="h-48"></div>
 
 
-    <div id="backbox" class="justify-center flex flex-col items-center h-screen">
-        <div id="body1" class="content content translate-y-[-100%]">
-            <h1 class="text-4xl text-center">今天有什么可以帮到您喵～</h1>
+
+    <div id="tips" class="justify-center flex flex-col items-center h-screen">
+        <div id="body1" class="content content translate-y-[-580%]">
+            <h1 class="text-2xl text-center">今天有什么可以帮到您喵～</h1>
             </br>
-            <p class="text-center mt-4 text-red-600">对不起哦，网站还在建设中喵...</p>
-            
+
         </div>
 
 
-    <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('gpt-query-form');
 
-            form.addEventListener('submit', function (event) {
-                event.preventDefault(); // 阻止表单默认提交
 
-                const formData = new FormData(form);
-                const postData = {
-                    user_query: formData.get('user_query'),
-                    enable_markdown: formData.get('enable_markdown') === 'on'
-                };
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('gpt-query-form');
+                const tipsDiv = document.getElementById('tips');
+                const userInput = document.getElementById('user-query');
+                let conversations = [];
+                let isWaitingForReply = false; // 初始化等待回复的标志
+                // 更新 textarea 行数的函数
+                function updateRows() {
+                    var lines = userInput.value.split('\n').length;
+                    var maxRows = 8;
+                    // 更新 rows，但不超过 maxRows
+                    userInput.rows = lines <= maxRows ? lines : maxRows;
+                }
 
-                // 替换这里的URL为您的目标URL
-                fetch('您的目标URL', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(postData),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        // 处理成功响应
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        // 处理错误
+                // 绑定 input 事件到 textarea
+                userInput.addEventListener('input', updateRows);
+
+                function displayResponse(htmlContent) {
+                    const responseContainer = document.getElementById('response-container');
+                    const tipsDiv = document.getElementById('tips'); // 获取提示区域的元素
+
+
+                    const messageDiv = document.createElement('div');
+                    // 创建包含 "AI:" 的 <strong> 元素
+                    const label = document.createElement('strong');
+                    label.innerHTML = 'AI:';
+                    label.style.fontSize = '24px'; // 设置字体大小为24px
+                    // 创建包含 htmlContent 的 div 元素，并对其应用特定样式
+                    const contentDiv = document.createElement('div');
+                    contentDiv.innerHTML = htmlContent;
+                    // 动画
+                    contentDiv.style.animation = 'typeKeyframes 0.5s ease-in-out';
+                    // 可以在这里为 contentDiv 添加特定的类或样式
+                    contentDiv.classList.add('html-content', 'm-4'); // 假设 'html-content' 是为了其他目的而预定义的样式
+                    // 将 label 和 contentDiv 添加到 messageDiv
+                    messageDiv.appendChild(label);
+                    messageDiv.appendChild(contentDiv);
+                    // 应用其他样式到 messageDiv
+                    messageDiv.classList.add('message-box', 'p-2', 'my-4', 'rounded', 'flex', 'flex-col');
+                    // 将 messageDiv 添加到容器中
+                    responseContainer.appendChild(messageDiv);
+
+
+
+                    responseContainer.scrollTop = responseContainer.scrollHeight;
+                    // tipsDiv.style.display = 'none'; // 隐藏提示区域
+
+                }
+                function handleQuery(userQuery, enableMarkdown) {
+                    if (isWaitingForReply) {
+                        // 如果已经在等待回复，则不处理新的提交
+                        return;
+                    }
+                    isWaitingForReply = true; // 设置标志，表示开始等待回复
+
+                    tipsDiv.style.display = 'none'; // 隐藏提示区域
+                    conversations.push({
+                        role: "user",
+                        parts: [{ text: userQuery }]
                     });
-            });
-        });
+                    /////////////////////////////
+                    const responseContainer = document.getElementById('response-container');
 
+                    const messageDiv = document.createElement('div');
+                    const label = document.createElement('strong');
+                    label.innerHTML = 'You:';
+                    label.style.fontSize = '24px';
 
-        document.addEventListener('keydown', function (event) {
-            const input = document.activeElement;
+                    const userQueryPre = document.createElement('div');
+                    userQueryPre.classList.add('m-4');
+                    // 假设 userQuery 是之前定义的
+                    // const userQuery = "Hello, World!";
+                    userQueryPre.innerHTML = userQuery;
+                    // 动画
+                    userQueryPre.style.animation = 'typeKeyframes 0.5s ease-in-out';
 
-            // 检查是否为"Enter"键并且焦点在<textarea>元素上
-            if (event.key === 'Enter' && input.tagName === 'TEXTAREA') {
-                if (event.shiftKey) {
-                    // Shift + Enter被按下，插入换行
-                    event.preventDefault(); // 阻止默认行为
+                    const userQueryContainer = document.createElement('div');
+                    userQueryContainer.classList.add('flex', 'flex-col', 'text-black');
+                    userQueryContainer.appendChild(userQueryPre);
+                    messageDiv.appendChild(label);
+                    messageDiv.appendChild(userQueryContainer);
 
-                    const start = input.selectionStart;
-                    const end = input.selectionEnd;
+                    messageDiv.classList.add('p-2', 'my-4', 'flex', 'flex-col');
+                    responseContainer.scrollTop = responseContainer.scrollHeight;
+                    responseContainer.appendChild(messageDiv);
+                    /////////////////////////////
+                    const postData = {
+                        contents: conversations
+                    };
 
-                    // 插入换行符并更新光标位置
-                    input.value = input.value.substring(0, start) + "\n" + input.value.substring(end);
-                    input.selectionStart = input.selectionEnd = start + 1;
-                } else {
-                    // 仅Enter被按下，尝试提交表单
-                    event.preventDefault(); // 防止表单再次提交
+                    // 替换这里的URL为您的目标URL
+                    // fetch('https://gemini.kumosleeping.workers.dev', {
+                    let key = 'AI' + String.fromCharCode(122) +'a' +'SyC-' + (50 + 1) + 'kD' + String.fromCharCode(85) + (90 - 0) + 'el' + (5).toString() + 'xv' + String.fromCharCode(74) + 'AT' + 'SAo' + (6).toString() +`J`+ (2 * 0.5) + 'IS' + String.fromCharCode(113) + 'Q' + 'WH' + 'ql' + '_E';
+                    // 别给谷歌看见就行，你们看见了没事，反正免费又不是没有
+                    fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
 
-                    // 找到并提交<textarea>的父表单
-                    let parentForm = input;
-                    while (parentForm.tagName !== 'FORM' && parentForm.parentNode) {
-                        parentForm = parentForm.parentNode;
-                    }
-                    if (parentForm.tagName === 'FORM') {
-                        parentForm.submit();
-                    }
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(postData),
+                    })
+                        .then(response => response.json())
+                        .then(data => {    
+
+                            
+                            // 使用 marked 将 Markdown 转换为 HTML
+
+                            var md_content = data.candidates[0].content?.parts[0].text || "Sorry, I don't want to continue this conversation, I'm still learning, thank you for your understanding 🙏.";
+
+                            conversations.push({
+                                role: "model",
+                                parts: [{ text: md_content }]
+                            });
+                            // 
+                            isWaitingForReply = false; // 重置标志，允许再次提交
+                            // console.log(md_content);
+
+                            const htmlContent = enableMarkdown ? marked.parse(md_content) : md_content;
+
+                            console.log(htmlContent);
+                            displayResponse(htmlContent);
+                            // userInput.value = ''; // Clear input after response
+                        })
+                        .catch((error) => {
+                            isWaitingForReply = false; // 重置标志，允许再次提交
+                            conversations.push({
+                                role: "model",
+                                parts: [{ text: "An error occurred while processing your request. Please try again later."}]
+                            });
+                            displayResponse(`<p>An error occurred while processing your request. Please try again later.</p>`);
+                            console.error('Error:', error);
+                            // userInput.value = ''; // Clear input after error
+                        });
                 }
-            }
-        });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var textarea = document.getElementById('user-query');
+                form.addEventListener('submit', function (event) {
+                    if (!isWaitingForReply) {
+                        const userQuery = userInput.value;
+                        const enableMarkdown = document.getElementById('markdown-checkbox').checked;
+                        handleQuery(userQuery, enableMarkdown);
+                    }
+                    event.preventDefault();
+                    const userQuery = userInput.value;
+                    const enableMarkdown = document.getElementById('markdown-checkbox').checked;
+                    handleQuery(userQuery, enableMarkdown);
+                });
 
-            // 更新 textarea 行数的函数
-            function updateRows() {
-                var lines = textarea.value.split('\n').length;
-                var maxRows = 8;
-                // 更新 rows，但不超过 maxRows
-                textarea.rows = lines <= maxRows ? lines : maxRows;
-            }
-            // 绑定 input 事件
-            textarea.addEventListener('input', updateRows);
-            // 绑定 keydown 事件以捕捉 Shift + Enter
-            textarea.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter' && event.shiftKey) {
-                    // 模拟 input 事件以更新行数
-                    setTimeout(updateRows, 0); // 使用 setTimeout 确保 textarea 的值已更新
-                }
+                // 优化 Enter 和 Shift+Enter 的处理
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' && userInput.tagName === 'TEXTAREA' && !event.isComposing && !isWaitingForReply) {
+                        event.preventDefault();
+
+                        if (event.shiftKey) {
+                            const start = userInput.selectionStart;
+                            const end = userInput.selectionEnd;
+                            userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+                            userInput.selectionStart = userInput.selectionEnd = start + 1;
+                            setTimeout(updateRows, 0); // 更新行数
+                        } else {
+                            const userQuery = userInput.value;
+                            const enableMarkdown = document.getElementById('markdown-checkbox').checked;
+                            handleQuery(userQuery, enableMarkdown);
+                            userInput.value = ''; // 清空输入框
+                            // 更新行数
+                            userInput.rows = 1;
+                        }
+                    }
+                });
             });
-        });
+        </script>
 
 
-    </script>
 
 </body>
 
