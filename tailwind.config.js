@@ -1,4 +1,4 @@
 module.exports = {
   purge: ['./**/*.html', './**/*.js', './*.html'],
-  // content: [],
+  content: ['./**/*.html', './**/*.js', './*.html'],
 }
