@@ -1,92 +1,43 @@
 <!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kumo's Website</title>
-    <link rel="stylesheet" href="./css/build.css">
-    <!-- <link rel="stylesheet" href="./css/origin.css"> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script> -->
-    <script src="./typed.js"></script>
-    <style>
-        .typed-cursor {
-            font-size: 36px;
-            /* 调整光标的大小 */
-            height: 36px;
-            /* 确保光标的高度适应字体大小 */
-            /* 白色 */
-            color: white;
-        }
-    </style>
-    <style>
-        .full-screen-background {
-            background-image: url('background.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            /* 这将确保背景至少和视窗一样高 */
-            background-attachment: fixed;
-        }
-    </style>
-
+  <meta charset="UTF-8">
+  <title>kumo's doc</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"> -->
+  <link rel="stylesheet" href="./docsify.css">
 </head>
 
-<body class="full-screen-background">
+<body>
+  <div id="app"></div>
+  <script>
 
-    <div id="backbox" class="justify-center flex flex-col items-center h-screen">
+    window.$docsify = {
+      name: 'kumoSleeping',
+      themeColor: "orange",
+      auto2top: true,
+      homepage: "0.md",
+      loadSidebar: true,
+      subMaxLevel: 2,
+      count: {
+        countable: true, fontsize: '0.9em', color: 'rgb(90,90,90)', language: 'chinese'
+      }
+    };
+  </script>
+  <!-- <script src="./docsify.js"></script> -->
 
-        <div id="body1" class="content content translate-y--0">
-            <div id="typed-output" class="inline-block whitespace-nowrap text-4xl text-center text-white"></div>
-        </div>
-
-
-        <div id="div2" class="absolute bottom-2 w-full text-center pb-4">
-            <p class="text-1xl">
-                <a href="/doc/" class=" text-white mx-4">
-                    文章
-                </a>
-                <a href="/gemini/" class=" text-white mx-4">
-                    Gemini Ai
-                </a>
-                <a href="/bdc/" class=" text-white mx-4">
-                    自制谱下载
-                </a>
-                <a href="https://github.com/kumoSleeping" class=" text-white mx-4">
-                    Github
-                </a>
-                <a href="add/" class=" text-white mx-4">
-                    扩列
-                </a>
-            </p>
-        </div>
-
-
-
-        <script>
-            var options = {
-                strings: [
-                    '我是 kumo.',
-                    '我是一名软件专业的学生.',
-                    '我是一个聊天机器人爱好者.',
-                    '我是 Tsugu Bot 维护者之一.',
-                    '我是 Poppin\'Party 的粉丝.',
-                    '我是现地 LIVE 活动 爱好者.',
-                    '很高兴认识你！',
-                    '很高兴认识你！'
-                ],
-                typeSpeed: 50,
-                backSpeed: 30,
-                backDelay: 1000,
-                startDelay: 1000,
-                loop: true,
-                onComplete: (self) => { console.log('Completed typing!'); },
-            };
-
-            var typed = new Typed('#typed-output', options);
-        </script>
-
-
+  <!-- Docsify v4 -->
+  <!-- 紫薯统计 -->
+  <!-- <script src="//unpkg.com/docsify-count/dist/countable.js"></script> -->
+  <script src="./p_count.js"></script>
+  <!-- 上下篇章 -->
+  <script src="./p_pagination.js"></script>
+  <!-- <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
+  <script src="./docsify.js"></script>
+  <!-- <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>  -->
 </body>
 
 </html>
