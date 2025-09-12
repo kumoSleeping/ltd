@@ -159,7 +159,7 @@
           spacingDiv.innerHTML = '<p style="text-align: center; color: gray; font-size: 0.9em;">© 2025 kumoSleeping. | Use Github Issues for feedback.</p>';
           gitalkContainer.parentNode.insertBefore(spacingDiv, gitalkContainer.nextSibling);
         }
-      }, 1000); // 延迟1秒，确保 Gitalk 完全加载
+      }, 0); // 延迟1秒，确保 Gitalk 完全加载
     };
     
     // 初始加载时添加间距
@@ -199,7 +199,7 @@
         } else {
           console.log(`Gitalk ID remains '${currentId}', no change`);
         }
-      }, 200); // 延迟200ms，确保Docsify更新完毕
+      }, 0); // 延迟200ms，确保Docsify更新完毕
     });
   </script>
 
