@@ -54,6 +54,21 @@
     .gt-container .gt-ico-text {
       color: orange !important;
     }
+    .gt-container .gt-link {
+        border-bottom: 1px dotted orange !important;
+    }
+    .gt-container .gt-popup .gt-action.is--active:before {
+        content: '';
+        width: 0.25em;
+        height: 0.25em;
+        background: orange !important;
+        position: absolute;
+        left: 0.5em;
+        top: 0.4375em;
+    }
+    .gt-container a {
+        color: orange !important;
+    }
   </style>
 </head>
 
@@ -105,6 +120,13 @@
   <!-- search -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.js"></script>
   <script>
+    // 跟踪当前ID
+    let currentId = (() => {
+      const hashPath = location.hash.split('?')[0];
+      const match = hashPath.match(/#\/([^\/]+)/);
+      return match ? match[1] : 'readme';
+    })();
+    
     const gitalk = new Gitalk({
       clientID: 'Ov23liuMK4WFpjUI5zeQ',
       clientSecret: 'ff9bc6f3f637ae3aeb908f211068cb67b2907c16',
@@ -115,22 +137,8 @@
       ],
       // facebook-like distraction free mode
       distractionFreeMode: false,
-      // 使用markdown文件标题(一定是数字)
-      // http://localhost:3000/?#/4?id=go-cqhttp%ef%bc%9a%e6%b8%90%e5%85%a5%e9%bb%91%e6%9a%97
-      // https://kumo.ltd/?#/4 
-      // 提取出 4 作为id
-      id: function() {
-        // 从 URL 中提取数字部分作为 ID
-        const hash = location.hash;
-        const match = hash.match(/#\/(\d+)/);
-        if (match) {
-          console.log(match[1]); // 输出提取的文档名
-          return match[1]; // 返回文档名, 作为 Gitalk 的 ID
-        }
-        console.log('readme');
-        // 如果没有找到文档名，使用 readme 作为默认值
-        return 'readme';
-      }(),
+      // 使用markdown文件标题(可以是数字或文字)
+      id: currentId,
       // 设置一个简单的标题
       title: location.pathname + location.hash,
       // 设置标签
@@ -160,27 +168,36 @@
     // 监听hashchange来重新初始化Gitalk
     window.addEventListener('hashchange', function() {
       setTimeout(() => {
-        const container = document.getElementById('gitalk-container');
-        if (container) {
-          container.innerHTML = '';
-          const newGitalk = new Gitalk({
-            clientID: 'Ov23liuMK4WFpjUI5zeQ',
-            clientSecret: 'ff9bc6f3f637ae3aeb908f211068cb67b2907c16',
-            repo: 'ltd',
-            owner: 'kumoSleeping',
-            admin: ['kumoSleeping'],
-            distractionFreeMode: false,
-            id: (() => {
-              const hash = location.hash;
-              const match = hash.match(/#\/(\d+)/);
-              return match ? match[1] : 'readme';
-            })(),
-            title: location.pathname + location.hash,
-            labels: ['gitalk'],
-          });
-          newGitalk.render('gitalk-container');
-          // 重新添加间距
-          addSpacingAfterGitalk();
+        const newId = (() => {
+          const hashPath = location.hash.split('?')[0];
+          const match = hashPath.match(/#\/([^\/]+)/);
+          return match ? match[1] : 'readme';
+        })();
+        
+        if (newId !== currentId) {
+          console.log(`Gitalk ID changed from '${currentId}' to '${newId}'`);
+          currentId = newId;
+          
+          const container = document.getElementById('gitalk-container');
+          if (container) {
+            container.innerHTML = '';
+            const newGitalk = new Gitalk({
+              clientID: 'Ov23liuMK4WFpjUI5zeQ',
+              clientSecret: 'ff9bc6f3f637ae3aeb908f211068cb67b2907c16',
+              repo: 'ltd',
+              owner: 'kumoSleeping',
+              admin: ['kumoSleeping'],
+              distractionFreeMode: false,
+              id: newId,
+              title: location.pathname + location.hash,
+              labels: ['gitalk'],
+            });
+            newGitalk.render('gitalk-container');
+            // 重新添加间距
+            addSpacingAfterGitalk();
+          }
+        } else {
+          console.log(`Gitalk ID remains '${currentId}', no change`);
         }
       }, 200); // 延迟200ms，确保Docsify更新完毕
     });
