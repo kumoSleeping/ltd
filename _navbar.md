@@ -1,17 +1,16 @@
 
 <!-- _navbar.md -->
 
-* 入门
+* 文档
+  * [首页](readme.md)
+  * [关于我](0.md)
 
-  * [快速开始](zh-cn/quickstart.md)
-  * [多页文档](zh-cn/more-pages.md)
-  * [定制导航栏](zh-cn/custom-navbar.md)
-  * [封面](zh-cn/cover.md)
-
-
-* 配置
-  * [配置项](zh-cn/configuration.md)
-  * [主题](zh-cn/themes.md)
-  * [使用插件](zh-cn/plugins.md)
-  * [Markdown 配置](zh-cn/markdown.md)
-  * [代码高亮](zh-cn/language-highlight.md)
+* 内容
+  * [聊天记录杂谈](1.md)
+  * [我喜欢的歌](2.md)
+  * [祥子雨后小故事](3.md)
+  * [Tsugu的故事](4.md)
+  * [黑暗时代](5.md)
+  * [MyGO.10](6.md)
+  * [gbc.1](7.md)
+  * [睡前奇思妙想](8.md)
