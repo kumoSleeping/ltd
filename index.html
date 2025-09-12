@@ -1,43 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <title>kumo's doc</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"> -->
-  <link rel="stylesheet" href="./docsify.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
 </head>
 
 <body>
   <div id="app"></div>
+</body>
   <script>
-
     window.$docsify = {
-      name: 'kumoSleeping',
       themeColor: "orange",
-      auto2top: true,
-      homepage: "0.md",
+      homepage: "readme.md",
       loadSidebar: true,
       subMaxLevel: 2,
+      loadNavbar: true,
       count: {
         countable: true, fontsize: '0.9em', color: 'rgb(90,90,90)', language: 'chinese'
-      }
+      },
+      tabs: {
+        persist: true,
+        sync: true,
+        theme: 'material', 
+        tabComments: true, 
+        tabHeadings: true
+      },
+      search: {
+        maxAge: 86400000,
+        paths: [],
+        placeholder: 'Type to search',
+        noData: 'No Results!',
+        depth: 2,
+        hideOtherSidebarContent: true,
+      },
     };
   </script>
-  <!-- <script src="./docsify.js"></script> -->
-
   <!-- Docsify v4 -->
-  <!-- 紫薯统计 -->
-  <!-- <script src="//unpkg.com/docsify-count/dist/countable.js"></script> -->
-  <script src="./p_count.js"></script>
+  <!-- 字数统计 -->
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
   <!-- 上下篇章 -->
-  <script src="./p_pagination.js"></script>
-  <!-- <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
-  <script src="./docsify.js"></script>
-  <!-- <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>  -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <!-- docsify -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <!-- 代码块复制到剪切板 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css" />
+  <!-- tabs -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <!-- gitalk -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+  <!-- search -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.js"></script>
+  <script>
+    const gitalk = new Gitalk({
+      clientID: 'Ov23liuMK4WFpjUI5zeQ',
+      clientSecret: 'ff9bc6f3f637ae3aeb908f211068cb67b2907c16',
+      repo: 'ltd',
+      owner: 'kumoSleeping',
+      admin: [
+        'kumoSleeping',
+      ],
+      // facebook-like distraction free mode
+      distractionFreeMode: false,
+    });
+    gitalk.render('gitalk-container')
+  </script>
 </body>
 
 </html>
