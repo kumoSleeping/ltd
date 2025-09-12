@@ -68,15 +68,12 @@
       // facebook-like distraction free mode
       distractionFreeMode: false,
       // 使用 MD5 哈希来避免中文字符问题
-      id: function() {
-        return CryptoJS.MD5(location.pathname + location.hash).toString();
-      },
+      id: location.pathname, 
       // 设置标题，避免使用 URL
       title: document.title,
       // 设置标签
       labels: ['gitalk'],
     });
-    gitalk.render('gitalk-container')
   </script>
 </body>
 
