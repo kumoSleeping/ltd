@@ -5,6 +5,56 @@
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <style>
+    /* 自定义Gitalk样式，匹配橙色主题 */
+    .gt-container * {
+      -webkit-box-sizing: border-box !important;
+      box-sizing: border-box !important;
+    }
+    .gt-container .gt-btn:not(.gt-btn-preview) {
+      border-color: orange !important;
+      background-color: orange !important;
+      color: white !important;
+    }
+    .gt-container .gt-btn:not(.gt-btn-preview):hover {
+      border-color: darkorange !important;
+      background-color: darkorange !important;
+    }
+    .gt-container .gt-header-controls .gt-btn {
+      border-color: orange !important;
+      background-color: orange !important;
+      color: white !important;
+    }
+    .gt-container .gt-header-controls .gt-btn:hover {
+      border-color: darkorange !important;
+      background-color: darkorange !important;
+    }
+    .gt-container .gt-btn.gt-btn-preview {
+      background-color: white !important;
+      color: orange !important;
+      border-color: orange !important;
+    }
+    .gt-container .gt-btn.gt-btn-preview:hover {
+      background-color: #f5f5f5 !important;
+      color: orange !important;
+      border-color: orange !important;
+    }
+    .gt-container .gt-comment-username {
+      color: orange !important;
+    }
+    .gt-container .gt-action {
+      color: orange !important;
+    }
+    .gt-container .gt-action:hover {
+      color: darkorange !important;
+    }
+    .gt-container .gt-svg svg {
+      fill: orange !important;
+    }
+    .gt-container .gt-ico-text {
+      color: orange !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -52,8 +102,6 @@
   <!-- gitalk -->
   <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/gitalk.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
-  <!-- CryptoJS for MD5 hashing -->
-  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
   <!-- search -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.js"></script>
   <script>
@@ -67,14 +115,77 @@
       ],
       // facebook-like distraction free mode
       distractionFreeMode: false,
-      // 使用 MD5 哈希来避免中文字符问题
-      id: location.pathname, 
-      // 设置标题，避免使用 URL
-      title: document.title,
+      // 使用markdown文件标题(一定是数字)
+      // http://localhost:3000/?#/4?id=go-cqhttp%ef%bc%9a%e6%b8%90%e5%85%a5%e9%bb%91%e6%9a%97
+      // https://kumo.ltd/?#/4 
+      // 提取出 4 作为id
+      id: function() {
+        // 从 URL 中提取数字部分作为 ID
+        const hash = location.hash;
+        const match = hash.match(/#\/(\d+)/);
+        if (match) {
+          console.log(match[1]); // 输出提取的文档名
+          return match[1]; // 返回文档名, 作为 Gitalk 的 ID
+        }
+        console.log('readme');
+        // 如果没有找到文档名，使用 readme 作为默认值
+        return 'readme';
+      }(),
+      // 设置一个简单的标题
+      title: location.pathname + location.hash,
       // 设置标签
       labels: ['gitalk'],
     });
+    
+    // 在 Gitalk 渲染完成后添加空白 div
+    const addSpacingAfterGitalk = () => {
+      setTimeout(() => {
+        const gitalkContainer = document.getElementById('gitalk-container');
+        if (gitalkContainer && !gitalkContainer.nextElementSibling?.classList.contains('gitalk-spacing')) {
+          const spacingDiv = document.createElement('div');
+          spacingDiv.className = 'gitalk-spacing';
+          spacingDiv.style.height = '100px';
+          spacingDiv.style.display = 'flex';
+          spacingDiv.style.alignItems = 'center';
+          spacingDiv.style.justifyContent = 'center';
+          spacingDiv.innerHTML = '<p style="text-align: center; color: gray; font-size: 0.9em;">© 2025 kumoSleeping. | Use Github Issues for feedback.</p>';
+          gitalkContainer.parentNode.insertBefore(spacingDiv, gitalkContainer.nextSibling);
+        }
+      }, 1000); // 延迟1秒，确保 Gitalk 完全加载
+    };
+    
+    // 初始加载时添加间距
+    addSpacingAfterGitalk();
+    
+    // 监听hashchange来重新初始化Gitalk
+    window.addEventListener('hashchange', function() {
+      setTimeout(() => {
+        const container = document.getElementById('gitalk-container');
+        if (container) {
+          container.innerHTML = '';
+          const newGitalk = new Gitalk({
+            clientID: 'Ov23liuMK4WFpjUI5zeQ',
+            clientSecret: 'ff9bc6f3f637ae3aeb908f211068cb67b2907c16',
+            repo: 'ltd',
+            owner: 'kumoSleeping',
+            admin: ['kumoSleeping'],
+            distractionFreeMode: false,
+            id: (() => {
+              const hash = location.hash;
+              const match = hash.match(/#\/(\d+)/);
+              return match ? match[1] : 'readme';
+            })(),
+            title: location.pathname + location.hash,
+            labels: ['gitalk'],
+          });
+          newGitalk.render('gitalk-container');
+          // 重新添加间距
+          addSpacingAfterGitalk();
+        }
+      }, 200); // 延迟200ms，确保Docsify更新完毕
+    });
   </script>
+
 </body>
 
 </html>
